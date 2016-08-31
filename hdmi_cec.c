@@ -387,6 +387,9 @@ int cec_send_message_ext(int dest, int len, unsigned char *buffer)
     int i;
     cec_message_t msg;
 
+    if (!hal_info)
+        return -1;
+
     if (hal_info->device_type == DEV_TYPE_PLAYBACK) {
         addr = hal_info->addr_bitmap;
         addr &= 0x7fff;
@@ -742,7 +745,7 @@ JNIEXPORT jint JNICALL
 Java_com_droidlogic_app_HdmiCecExtend_nativeGetPhysicalAddr(JNIEnv *env, jobject thiz)
 {
     unsigned short addr = -1;
-    if (cec_get_physical_address(hal_info->dev, &addr) < 0) {
+    if (hal_info && cec_get_physical_address(hal_info->dev, &addr) < 0) {
         return -1;
     }
 
@@ -754,7 +757,8 @@ Java_com_droidlogic_app_HdmiCecExtend_nativeGetVendorId(JNIEnv *env, jobject thi
 {
     unsigned int id = 0;
 
-    cec_get_vendor_id(hal_info->dev, &id);
+    if (hal_info)
+        cec_get_vendor_id(hal_info->dev, &id);
     return id;
 }
 
