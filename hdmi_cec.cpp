@@ -173,7 +173,7 @@ static int cec_get_physical_address(const struct hdmi_cec_device* dev, uint16_t*
 static int cec_send_message(const struct hdmi_cec_device* dev, const cec_message_t* msg)
 {
     aml_cec_hal_t *priv = (aml_cec_hal_t *)dev;
-    return priv->client->sendMessage(msg, false);
+    return priv->client->sendMessage(msg);
 }
 
 /*
@@ -188,7 +188,7 @@ static void cec_register_event_callback(const struct hdmi_cec_device* dev,
 {
     if (!hal_info || hal_info->fd < 0)
         return;
-    D("dev:%p, callback:%p, arg:%p\n", callback, arg, dev);
+
     hal_info->cb      = callback;
     hal_info->cb_data = arg;
 }
