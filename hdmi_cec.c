@@ -358,7 +358,7 @@ static int cec_send_message(const struct hdmi_cec_device* dev, const cec_message
         return HDMI_RESULT_FAIL;
 
     /* don't send message if controled by extend */
-    if (hal_info->ext_control == 0x03 && dev) {
+    if (hal_info->ext_control == 0x03 && has_handled_by_extend(msg)) {
         return HDMI_RESULT_SUCCESS;
     }
 
@@ -377,6 +377,21 @@ static int cec_send_message(const struct hdmi_cec_device* dev, const cec_message
 #endif
     return ret;
 }
+
+int has_handled_by_extend(const cec_message_t* message)
+{
+    int ret = 0;
+    int opcode = message->body[0] & 0xff;
+    switch (opcode) {
+        case CEC_MESSAGE_SET_MENU_LANGUAGE:
+            ret = 1;
+            break;
+        default:
+            break;
+    }
+    return ret;
+}
+
 
 /*
  * export cec send message API for other usage
