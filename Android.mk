@@ -19,7 +19,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := hdmi_cec.cpp
 LOCAL_PRELINK_MODULE := false
-LOCAL_C_INCLUDES += $(TOP)/vendor/amlogic/frameworks/services/hdmicec/binder
+LOCAL_C_INCLUDES += $(TOP)/vendor/amlogic/frameworks/services/hdmicec/binder system/core/base/include
 LOCAL_MODULE_RELATIVE_PATH := hw
 LOCAL_SHARED_LIBRARIES := liblog libutils libcutils libnativehelper libhdmicec
 LOCAL_MODULE := hdmi_cec.amlogic
