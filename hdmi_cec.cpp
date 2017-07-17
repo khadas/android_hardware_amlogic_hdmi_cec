@@ -1,29 +1,13 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (c) 2014 Amlogic, Inc. All rights reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This source code is subject to the terms and conditions defined in the
+ * file 'LICENSE' which is part of this source code package.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * Description:
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/*
- *     Amlogic HDMITX CEC HAL
- *       Copyright (C) 2014
+ *    used for HDMI CEC HAL
  *
- * This implements a hdmi cec hardware library for the Android emulator.
- * the following code should be built as a shared library that will be
- * placed into /system/lib/hw/hdmi_cec.so
- *
- * It will be loaded by the code in hardware/libhardware/hardware.c
- * which is itself called from
- * frameworks/base/services/core/jni/com_android_server_hdmi_HdmiCecController.cpp
  */
 
 #include <cutils/log.h>
