@@ -44,6 +44,7 @@
 #include <JNIHelp.h>
 
 #include <HdmiCecClient.h>
+#include <HdmiCecHidlClient.h>
 
 #ifdef LOG_TAG
 #undef LOG_TAG
@@ -67,6 +68,7 @@ using namespace android;
 typedef struct aml_cec_hal {
     hdmi_cec_device_t          device;
     sp<HdmiCecClient>          client;
+    HdmiCecHidlClient          *hidlClient;
     void                       *cb_data;
     event_callback_t           cb;
     int                        fd;
@@ -124,7 +126,8 @@ void HdmiCecCallback::onEventUpdate(const hdmi_cec_event_t* cecEvent)
 static int cec_add_logical_address(const struct hdmi_cec_device* dev, cec_logical_address_t addr)
 {
     aml_cec_hal_t *priv = (aml_cec_hal_t *)dev;
-    return priv->client->addLogicalAddress(addr);
+    //return priv->client->addLogicalAddress(addr);
+    return priv->hidlClient->addLogicalAddress(addr);
 }
 
 /*
@@ -137,7 +140,8 @@ static int cec_add_logical_address(const struct hdmi_cec_device* dev, cec_logica
 static void cec_clear_logical_address(const struct hdmi_cec_device* dev)
 {
     aml_cec_hal_t *priv = (aml_cec_hal_t *)dev;
-    priv->client->clearLogicaladdress();
+    //priv->client->clearLogicaladdress();
+    priv->hidlClient->clearLogicaladdress();
 }
 
 /*
@@ -154,7 +158,8 @@ static void cec_clear_logical_address(const struct hdmi_cec_device* dev)
 static int cec_get_physical_address(const struct hdmi_cec_device* dev, uint16_t* addr)
 {
     aml_cec_hal_t *priv = (aml_cec_hal_t *)dev;
-    return priv->client->getPhysicalAddress(addr);
+    //return priv->client->getPhysicalAddress(addr);
+    return priv->hidlClient->getPhysicalAddress(addr);
 }
 
 /*
@@ -173,7 +178,8 @@ static int cec_get_physical_address(const struct hdmi_cec_device* dev, uint16_t*
 static int cec_send_message(const struct hdmi_cec_device* dev, const cec_message_t* msg)
 {
     aml_cec_hal_t *priv = (aml_cec_hal_t *)dev;
-    return priv->client->sendMessage(msg);
+    //return priv->client->sendMessage(msg);
+    return priv->hidlClient->sendMessage(msg);
 }
 
 /*
@@ -183,7 +189,7 @@ static int cec_send_message(const struct hdmi_cec_device* dev, const cec_message
  * It will be passed back when the callback is invoked so that the context
  * can be retrieved.
  */
-static void cec_register_event_callback(const struct hdmi_cec_device* dev,
+static void cec_register_event_callback(const struct hdmi_cec_device* dev __unused,
         event_callback_t callback, void* arg)
 {
     if (!hal_info || hal_info->fd < 0)
@@ -199,7 +205,8 @@ static void cec_register_event_callback(const struct hdmi_cec_device* dev,
 static void cec_get_version(const struct hdmi_cec_device* dev, int* version)
 {
     aml_cec_hal_t *priv = (aml_cec_hal_t *)dev;
-    priv->client->getVersion(version);
+    //priv->client->getVersion(version);
+    priv->hidlClient->getVersion(version);
 }
 
 /*
@@ -210,7 +217,8 @@ static void cec_get_version(const struct hdmi_cec_device* dev, int* version)
 static void cec_get_vendor_id(const struct hdmi_cec_device* dev, uint32_t* vendor_id)
 {
     aml_cec_hal_t *priv = (aml_cec_hal_t *)dev;
-    priv->client->getVendorId(vendor_id);
+    //priv->client->getVendorId(vendor_id);
+    priv->hidlClient->getVendorId(vendor_id);
 }
 
 /*
@@ -222,7 +230,8 @@ static void cec_get_port_info(const struct hdmi_cec_device* dev,
         struct hdmi_port_info* list[], int* total)
 {
     aml_cec_hal_t *priv = (aml_cec_hal_t *)dev;
-    priv->client->getPortInfos(list, total);
+    //priv->client->getPortInfos(list, total);
+    priv->hidlClient->getPortInfos(list, total);
 }
 
 /*
@@ -233,7 +242,8 @@ static void cec_get_port_info(const struct hdmi_cec_device* dev,
 static void cec_set_option(const struct hdmi_cec_device* dev, int flag, int value)
 {
     aml_cec_hal_t *priv = (aml_cec_hal_t *)dev;
-    priv->client->setOption(flag, value);
+    //priv->client->setOption(flag, value);
+    priv->hidlClient->setOption(flag, value);
 }
 
 
@@ -247,7 +257,8 @@ static void cec_set_option(const struct hdmi_cec_device* dev, int flag, int valu
 static void cec_set_audio_return_channel(const struct hdmi_cec_device* dev, int port_id, int flag)
 {
     aml_cec_hal_t *priv = (aml_cec_hal_t *)dev;
-    priv->client->setAudioReturnChannel(port_id, flag);
+    //priv->client->setAudioReturnChannel(port_id, flag);
+    priv->hidlClient->setAudioReturnChannel(port_id, flag);
 }
 
 /*
@@ -258,14 +269,16 @@ static void cec_set_audio_return_channel(const struct hdmi_cec_device* dev, int 
 static int cec_is_connected(const struct hdmi_cec_device* dev, int port_id)
 {
     aml_cec_hal_t *priv = (aml_cec_hal_t *)dev;
-    return priv->client->isConnected(port_id);
+    //return priv->client->isConnected(port_id);
+    return priv->hidlClient->isConnected(port_id);
 }
 
 /** Close the hdmi cec device */
 static int cec_close(struct hw_device_t *dev)
 {
      if (hal_info != NULL) {
-        return hal_info->client->closeCecDevice();
+        //return hal_info->client->closeCecDevice();
+        return hal_info->hidlClient->closeCecDevice();
      }
      free(dev);
     return -1;
@@ -290,9 +303,12 @@ static int open_cec( const struct hw_module_t* module, char const *name,
 
     aml_cec_hal_t *dev = (aml_cec_hal_t*)malloc(sizeof(*dev));
     memset(dev, 0, sizeof(*dev));
-    dev->client = HdmiCecClient::connect();
-    dev->client->setEventObserver(new HdmiCecCallback());
-    dev->fd = dev->client->openCecDevice();
+    //dev->client = HdmiCecClient::connect();
+    //dev->client->setEventObserver(new HdmiCecCallback());
+    //dev->fd = dev->client->openCecDevice();
+    dev->hidlClient = HdmiCecHidlClient::connect();
+    dev->hidlClient->setEventObserver(new HdmiCecCallback());
+    dev->fd = dev->hidlClient->openCecDevice();
 
     dev->device.common.tag = HARDWARE_DEVICE_TAG;
     dev->device.common.version = 0;

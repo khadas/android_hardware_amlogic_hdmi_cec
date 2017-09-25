@@ -16,12 +16,23 @@ LOCAL_PATH := $(call my-dir)
 
 # HAL module implemenation, not prelinked and stored in
 # hw/<LIGHTS_HARDWARE_MODULE_ID>.<ro.hardware>.so
+
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := hdmi_cec.cpp
 LOCAL_PRELINK_MODULE := false
-LOCAL_C_INCLUDES += $(TOP)/vendor/amlogic/frameworks/services/hdmicec/binder system/core/base/include
+LOCAL_C_INCLUDES += \
+  $(TOP)/vendor/amlogic/frameworks/services/hdmicec/binder \
+  system/core/base/include
+
 LOCAL_MODULE_RELATIVE_PATH := hw
-LOCAL_SHARED_LIBRARIES := liblog libutils libcutils libnativehelper libhdmicec
+LOCAL_SHARED_LIBRARIES := \
+  vendor.amlogic.hardware.hdmicec@1.0_vendor \
+  liblog \
+  libutils \
+  libcutils \
+  libnativehelper \
+  libhdmicec
+
 LOCAL_MODULE := hdmi_cec.amlogic
 LOCAL_MODULE_TAGS := optional
 
