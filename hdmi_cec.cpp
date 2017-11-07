@@ -306,7 +306,7 @@ static int open_cec( const struct hw_module_t* module, char const *name,
     //dev->client = HdmiCecClient::connect();
     //dev->client->setEventObserver(new HdmiCecCallback());
     //dev->fd = dev->client->openCecDevice();
-    dev->hidlClient = HdmiCecHidlClient::connect();
+    dev->hidlClient = HdmiCecHidlClient::connect(CONNECT_TYPE_HAL);
     dev->hidlClient->setEventObserver(new HdmiCecCallback());
     dev->fd = dev->hidlClient->openCecDevice();
 
